@@ -1,6 +1,6 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:web_scraping/job_ad.dart';
+import 'package:web_scraping/models/job_ad.dart';
 
 class DatabaseService {
   static final DatabaseService _instance = DatabaseService._internal();
