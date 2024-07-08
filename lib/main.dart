@@ -83,17 +83,40 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<List<JobAd>> getData(int page) async {
+    // var url = Uri.parse(
+    //     'https://www.upwork.com/nx/search/jobs/?q=$_searchQuery&page=$page');
+    // if (_entryLevel) {
+    //   url = Uri.parse(
+    //       'https://www.upwork.com/nx/search/jobs/?contractor_tier=1&q=$_searchQuery&sort=recency&page=$page');
+    // } else if (_intermediateLevel) {
+    //   url = Uri.parse(
+    //       'https://www.upwork.com/nx/search/jobs/?contractor_tier=2&q=$_searchQuery&sort=recency&page=$page');
+    // } else if (_expertLevel) {
+    //   url = Uri.parse(
+    //       'https://www.upwork.com/nx/search/jobs/?contractor_tier=3&q=$_searchQuery&sort=recency&page=$page');
+    // }
     var url = Uri.parse(
         'https://www.upwork.com/nx/search/jobs/?q=$_searchQuery&page=$page');
+    String contractorTiers = '';
+
     if (_entryLevel) {
+      contractorTiers += '1,';
+    }
+    if (_intermediateLevel) {
+      contractorTiers += '2,';
+    }
+    if (_expertLevel) {
+      contractorTiers += '3,';
+    }
+
+    if (contractorTiers.isNotEmpty) {
+      contractorTiers =
+          contractorTiers.substring(0, contractorTiers.length - 1);
       url = Uri.parse(
-          'https://www.upwork.com/nx/search/jobs/?contractor_tier=1&q=$_searchQuery&sort=recency&page=$page');
-    } else if (_intermediateLevel) {
+          'https://www.upwork.com/nx/search/jobs/?contractor_tier=$contractorTiers&q=$_searchQuery&sort=recency&page=$page');
+    } else {
       url = Uri.parse(
-          'https://www.upwork.com/nx/search/jobs/?contractor_tier=2&q=$_searchQuery&sort=recency&page=$page');
-    } else if (_expertLevel) {
-      url = Uri.parse(
-          'https://www.upwork.com/nx/search/jobs/?contractor_tier=3&q=$_searchQuery&sort=recency&page=$page');
+          'https://www.upwork.com/nx/search/jobs/?q=$_searchQuery&sort=recency&page=$page');
     }
 
     final response = await http.get(url);
