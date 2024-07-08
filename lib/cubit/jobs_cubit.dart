@@ -18,18 +18,20 @@ class JobsCubit extends Cubit<JobsState> {
     if (state is JobsLoading || !state.hasMoreData) return;
 
     emit(JobsLoading(state.jobs, state.favoriteJobs));
-    final newJobs = await _repository.fetchJobs(
-      page: _currentPage,
-      query: query,
-      entryLevel: entryLevel,
-      intermediateLevel: intermediateLevel,
-      expertLevel: expertLevel,
-    );
-    if (newJobs.isEmpty) {
-      emit(JobsLoaded(state.jobs, state.favoriteJobs, hasMoreData: false));
-    } else {
-      _currentPage++;
-      emit(JobsLoaded([...state.jobs, ...newJobs], state.favoriteJobs));
+    for (int page = 1; page <= 5; page++) {
+      final newJobs = await _repository.fetchJobs(
+        page: _currentPage,
+        query: query,
+        entryLevel: entryLevel,
+        intermediateLevel: intermediateLevel,
+        expertLevel: expertLevel,
+      );
+      if (newJobs.isEmpty) {
+        emit(JobsLoaded(state.jobs, state.favoriteJobs, hasMoreData: false));
+      } else {
+        _currentPage++;
+        emit(JobsLoaded([...state.jobs, ...newJobs], state.favoriteJobs));
+      }
     }
   }
 

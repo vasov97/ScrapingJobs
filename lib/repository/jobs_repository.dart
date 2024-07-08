@@ -12,15 +12,26 @@ class JobsRepository {
   }) async {
     var url =
         Uri.parse('https://www.upwork.com/nx/search/jobs/?q=$query&page=$page');
+    String contractorTiers = '';
+
     if (entryLevel) {
+      contractorTiers += '1,';
+    }
+    if (intermediateLevel) {
+      contractorTiers += '2,';
+    }
+    if (expertLevel) {
+      contractorTiers += '3,';
+    }
+
+    if (contractorTiers.isNotEmpty) {
+      contractorTiers =
+          contractorTiers.substring(0, contractorTiers.length - 1);
       url = Uri.parse(
-          'https://www.upwork.com/nx/search/jobs/?contractor_tier=1&q=$query&sort=recency&page=$page');
-    } else if (intermediateLevel) {
+          'https://www.upwork.com/nx/search/jobs/?contractor_tier=$contractorTiers&q=$query&sort=recency&page=$page');
+    } else {
       url = Uri.parse(
-          'https://www.upwork.com/nx/search/jobs/?contractor_tier=2&q=$query&sort=recency&page=$page');
-    } else if (expertLevel) {
-      url = Uri.parse(
-          'https://www.upwork.com/nx/search/jobs/?contractor_tier=3&q=$query&sort=recency&page=$page');
+          'https://www.upwork.com/nx/search/jobs/?q=$query&sort=recency&page=$page');
     }
 
     final response = await http.get(url);
