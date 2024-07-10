@@ -6,8 +6,8 @@ import 'package:web_scraping/utils/utils.dart';
 
 import '../providers/job_provider.dart';
 
-class JoListings extends StatelessWidget {
-  const JoListings({
+class JobListings extends StatelessWidget {
+  const JobListings({
     super.key,
     required ScrollController scrollController,
   }) : _scrollController = scrollController;
@@ -33,11 +33,19 @@ class JoListings extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator());
               }
               final jobAd = jobsProvider.jobAds[index];
+              bool isUpwork = jobAd.url.contains('upwork');
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Card(
                   elevation: 3,
                   child: ListTile(
+                    leading: Text(
+                      isUpwork ? 'U' : 'F',
+                      style: TextStyle(
+                          color: isUpwork ? Colors.green : Colors.blue,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800),
+                    ),
                     trailing: IconButton(
                       icon: Icon(
                         favoritesProvider.isFavorite(jobAd.title)

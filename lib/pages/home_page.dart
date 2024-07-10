@@ -41,8 +41,9 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.refresh),
       ),
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Upwork Jobs'),
+        title: const Text('Freelance Jobs'),
         actions: [
           IconButton(
             icon: const Icon(Icons.favorite),
@@ -57,8 +58,9 @@ class _MyHomePageState extends State<MyHomePage> {
             onSearch: () =>
                 context.read<JobsProvider>().searchJobs(_searchController.text),
           ),
+          const Text('Select filters only for Upwork jobs'),
           const JobFilters(),
-          JoListings(scrollController: _scrollController),
+          JobListings(scrollController: _scrollController),
         ],
       ),
     );

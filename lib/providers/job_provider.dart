@@ -24,14 +24,36 @@ class JobsProvider with ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    final newJobs = await fetchJobs(_currentPage);
-    jobAds.addAll(newJobs);
+    final freelanceJobs = await fetchFreelancerJobs(_currentPage);
+    final upworkJobs = await fetchJobs(_currentPage);
+    final allJobs = [...upworkJobs, ...freelanceJobs];
+    allJobs.sort((a, b) => a.title.compareTo(b.title));
+    jobAds.addAll(allJobs);
     _currentPage++;
     isLoading = false;
     if (_currentPage > 5) {
       hasMoreData = false;
     }
     notifyListeners();
+  }
+
+  Future<List<JobAd>> fetchFreelancerJobs(int page) async {
+    final url = Uri.parse(
+        'https://www.freelancer.com/jobs/flutter/$page/?w=f&redirect-times=1&ngsw-bypass=');
+    final response = await http.get(url);
+    dom.Document html = dom.Document.html(response.body);
+
+    final titles = html
+        .querySelectorAll('.JobSearchCard-primary-heading-link')
+        .map((e) => e.innerHtml.trim())
+        .toList();
+    final urls = html
+        .querySelectorAll('.JobSearchCard-primary-heading-link')
+        .map((e) => 'https://www.freelancer.com${e.attributes['href']}')
+        .toList();
+
+    return List.generate(titles.length,
+        (index) => JobAd(title: titles[index], url: urls[index]));
   }
 
   Future<List<JobAd>> fetchJobs(int page) async {
